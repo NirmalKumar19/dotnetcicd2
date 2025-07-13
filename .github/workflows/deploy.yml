@@ -16,9 +16,15 @@ jobs:
     - name: Clean IIS folder
       run: Remove-Item -Recurse -Force "C:\inetpub\mywebapp2\*" -ErrorAction SilentlyContinue
 
+    - name: Debug current working directory
+      run: |
+        echo "Current GitHub workspace:"
+        echo "${{ github.workspace }}"
+        dir "${{ github.workspace }}"
+
     - name: Build Docker image and extract publish folder
       run: |
-        docker build -f "dot net ci cd 2/Dockerfile" -t mywebapi-build "dot net ci cd 2"
+        docker build -f "${{ github.workspace }}\dot net ci cd 2\Dockerfile" -t mywebapi-build "${{ github.workspace }}\dot net ci cd 2"
         docker create --name extract-container mywebapi-build
         docker cp extract-container:/out/. "C:\inetpub\mywebapp2"
         docker rm extract-container
