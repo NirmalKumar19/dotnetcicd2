@@ -18,7 +18,7 @@ jobs:
 
     - name: Build Docker image and extract publish folder
       run: |
-        docker build -f "dot net ci cd/Dockerfile" -t mywebapi-build "dot net ci cd"
+        docker build -f "dot net ci cd 2/Dockerfile" -t mywebapi-build "dot net ci cd 2"
         docker create --name extract-container mywebapi-build
         docker cp extract-container:/out/. "C:\inetpub\mywebapp2"
         docker rm extract-container
