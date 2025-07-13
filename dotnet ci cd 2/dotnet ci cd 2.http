@@ -1,0 +1,6 @@
+@dotnet_ci_cd_2_HostAddress = http://localhost:5127
+
+GET {{dotnet_ci_cd_2_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
