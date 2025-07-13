@@ -13,18 +13,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Debug: Show directory structure
+      run: |
+        echo "Workspace path: ${{ github.workspace }}"
+        dir "${{ github.workspace }}"
+        dir "${{ github.workspace }}\dotnetcicd2"
+
     - name: Clean IIS folder
       run: Remove-Item -Recurse -Force "C:\inetpub\mywebapp2\*" -ErrorAction SilentlyContinue
 
-    - name: Debug current working directory
-      run: |
-        echo "Current GitHub workspace:"
-        echo "${{ github.workspace }}"
-        dir "${{ github.workspace }}"
-
     - name: Build Docker image and extract publish folder
       run: |
-        docker build -f "${{ github.workspace }}\dot net ci cd 2\Dockerfile" -t mywebapi-build "${{ github.workspace }}\dot net ci cd 2"
+        docker build -f "${{ github.workspace }}\dotnetcicd2\Dockerfile" -t mywebapi-build "${{ github.workspace }}\dotnetcicd2"
         docker create --name extract-container mywebapi-build
         docker cp extract-container:/out/. "C:\inetpub\mywebapp2"
         docker rm extract-container
