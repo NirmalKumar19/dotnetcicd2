@@ -1,0 +1,27 @@
+name: Build and Deploy to IIS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Clean IIS folder
+      run: Remove-Item -Recurse -Force "C:\inetpub\mywebapp2\*" -ErrorAction SilentlyContinue
+
+    - name: Build Docker image and extract publish folder
+      run: |
+        docker build -f "dot net ci cd/Dockerfile" -t mywebapi-build "dot net ci cd"
+        docker create --name extract-container mywebapi-build
+        docker cp extract-container:/out/. "C:\inetpub\mywebapp2"
+        docker rm extract-container
+
+    - name: Restart IIS
+      run: iisreset
